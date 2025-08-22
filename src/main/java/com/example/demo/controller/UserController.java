@@ -47,7 +47,13 @@ public class UserController {
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User uesrDetails) {
         Optional<User> optionalUser = userRepository.findById(id);
         if (optionalUser.isPresent()) {
-
+            User exitingUser = optionalUser.get();
+            exitingUser.setName(uesrDetails.getName());
+            exitingUser.setAge(uesrDetails.getAge());
+            userRepository.save(exitingUser);
+            return ResponseEntity.ok(exitingUser);
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 }
