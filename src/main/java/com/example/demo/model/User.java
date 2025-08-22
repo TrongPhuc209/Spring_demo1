@@ -1,14 +1,20 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Entity
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotBlank(message = "Name cannot be blank")
     private String name;
-    private int age;
+
+    @NotNull(message = "Age is required")
+    @Min(value = 1, message = "Age must be greater than 0")
+    private Integer age;
 
     public User() {
     }

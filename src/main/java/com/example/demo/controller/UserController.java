@@ -7,8 +7,11 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 
 import com.example.demo.repository.UserRepository;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
@@ -16,8 +19,11 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
-    @PostMapping
-    public User createUser(@RequestBody User user) {
+    @PostMapping("/create")
+    public Object createUser(@Valid @RequestBody User user, BindingResult result) {
+        if (result.hasErrors()) {
+            return result.getAllErrors();
+        }
         return userRepository.save(user);
     }
 
@@ -52,6 +58,17 @@ public class UserController {
             exitingUser.setAge(uesrDetails.getAge());
             userRepository.save(exitingUser);
             return ResponseEntity.ok(exitingUser);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+        Optional<User> userOptional = userRepository.findById(id);
+        if (userOptional.isPresent()) {
+            userRepository.deleteById(id);
+            return ResponseEntity.ok("User delete successfully!");
         } else {
             return ResponseEntity.notFound().build();
         }
