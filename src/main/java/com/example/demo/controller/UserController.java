@@ -43,4 +43,11 @@ public class UserController {
         }
     }
 
+    @PutMapping("{id}")
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User uesrDetails) {
+        Optional<User> optionalUser = userRepository.findById(id);
+        if (optionalUser.isPresent()) {
+
+        }
+    }
 }
